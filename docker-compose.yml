@@ -1,0 +1,44 @@
+version: '3.4'
+
+volumes:
+  django_sample.db.volume:
+    name: django_sample.db.volume
+  staticdata:
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: django_sample.db
+    environment:
+      MYSQL_ROOT_PASSWORD: x7guCQ3AELNu
+      MYSQL_USER: web
+      MYSQL_PASSWORD: x7guCQ3AELNu
+      MYSQL_DATABASE: web
+    volumes:
+      - django_sample.db.volume:/var/lib/mysql
+    ports:
+      - 3306:3306
+    tty: true
+  web:
+    container_name: django_sample.web
+    restart: always
+    build: ./web/
+    expose:
+      - "8001"
+    command: gunicorn django_sample.wsgi -b 0.0.0.0:8001
+    # command: python manage.py runserver 0.0.0.0:8001
+    # ports:
+    #   - "8001:8001"
+    volumes:
+      - "staticdata:/usr/src/django_sample/static/"
+    depends_on:
+      - mysql
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    volumes:
+      - "staticdata:/usr/src/django_sample/static/"
+    depends_on:
+      - web
