@@ -1,10 +1,7 @@
 import logging
 
 from django.core.management import BaseCommand
-print("before")
 from logging_sample.management.commands.utils.util_sample import logger_util
-print(dir(logger_util))
-print("after")
 
 logger = logging.getLogger(__name__)
 

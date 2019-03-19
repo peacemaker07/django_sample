@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from datetime import time
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,13 +32,13 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'logging_sample.apps.LoggingSampleConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'logging_sample',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +87,8 @@ DATABASES = {
         'NAME': 'web',
         'USER': 'web',
         'PASSWORD': 'x7guCQ3AELNu',
-        'HOST': 'mysql',
+        # 'HOST': 'mysql',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB',
@@ -139,10 +141,13 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(asctime)s %(levelname)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
             'format': '%(asctime)s %(levelname)s %(message)s'
+        },
+        'simple2': {
+            'format': '%(asctime)s [%(levelname)s] [%(name)s] [%(module)s] %(message)s'
         },
     },
     'filters': {
@@ -159,7 +164,13 @@ LOGGING = {
             'level': 'INFO',
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'verbose'
+        },
+        'console2': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple2'
         },
         # 'mail_admins': {
         #     'level': 'ERROR',
@@ -170,17 +181,46 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             # 'filename': os.path.join(BASE_DIR, 'products.log'),
-            'filename': '/var/log/django_sample/products.log',
-            'when': 'D',
+            'filename': os.path.join(BASE_DIR, 'products.log'),
+            'when': 'midnight',
             'interval': 1,
-            'formatter': 'simple',
-            'backupCount': 2,
+            'formatter': 'simple2',
+            'backupCount': 10,
+            # 'atTime': time(0, 0),
+        },
+        'file_time_rotating2': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            # 'filename': os.path.join(BASE_DIR, 'products.log'),
+            'filename': os.path.join(BASE_DIR, 'log/products2.log'),
+            'when': 'midnight',
+            'interval': 1,
+            'formatter': 'simple2',
+            'backupCount': 10,
+            # 'atTime': time(0, 0),
+        },
+        'file_logging': {
+            'level': 'INFO',
+            'formatter': 'simple2',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'backupCount': 5,
+            'maxBytes': 1000,
+            'filename': os.path.join(BASE_DIR, 'products.log'),
         },
     },
     'loggers': {
-        'okra.commands': {
-            'handlers': ['console', 'file_time_rotating'],
-            'level': 'DEBUG',
+        'logging_sample.management.commands.command_sample': {
+            'handlers': ['console2', 'file_time_rotating'],
+            # 'handlers': ['console', 'file_logging'],
+            'level': 'INFO',
+            'propagate': False,
+            # 'filters': ['special']
+        },
+        'logging_sample.management.commands.command_sample2': {
+            'handlers': ['console', 'file_time_rotating2'],
+            # 'handlers': ['console', 'file_logging'],
+            'level': 'INFO',
+            'propagate': False,
             # 'filters': ['special']
         }
     }
