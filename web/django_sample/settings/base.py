@@ -133,6 +133,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, STATIC_URL.strip('/'))
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 # ログイン後にwebにリダイレクト
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login'
