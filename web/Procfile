@@ -1,0 +1,1 @@
+web: gunicorn django_sample.wsgi_heroku --settings=django_sample.settings.heroku --log-file -
