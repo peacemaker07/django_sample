@@ -187,7 +187,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             # 'filename': os.path.join(BASE_DIR, 'products.log'),
-            'filename': os.path.join(BASE_DIR, '../../products.log'),
+            'filename': os.path.join(BASE_DIR, '../../django_sample/products.log'),
             'when': 'midnight',
             'interval': 1,
             'formatter': 'simple2',
@@ -211,7 +211,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'backupCount': 5,
             'maxBytes': 1000,
-            'filename': os.path.join(BASE_DIR, '../../products.log'),
+            'filename': os.path.join(BASE_DIR, '../../django_sample/products.log'),
         },
     },
     'loggers': {
