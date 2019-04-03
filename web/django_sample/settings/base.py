@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'logging_sample.apps.LoggingSampleConfig',
     'api.apps.ApiConfig',
+    'front.apps.FrontConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +53,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'django_sample.urls'
@@ -82,26 +81,18 @@ WSGI_APPLICATION = 'django_sample.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'web',
-        'USER': 'web',
-        'PASSWORD': 'x7guCQ3AELNu',
-        # 'HOST': 'mysql',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': 'SET default_storage_engine=INNODB',
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
-if 'test' in sys.argv or 'test_coverage' in sys.argv: #Covers regular testing and django-coverage
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+# if 'test' in sys.argv or 'test_coverage' in sys.argv: #Covers regular testing and django-coverage
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -141,6 +132,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, STATIC_URL.strip('/'))
+
+# ログイン後にwebにリダイレクト
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login'
 
 # https://docs.djangoproject.com/ja/2.0/topics/logging/
 LOGGING = {
@@ -188,7 +183,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             # 'filename': os.path.join(BASE_DIR, 'products.log'),
-            'filename': os.path.join(BASE_DIR, 'products.log'),
+            'filename': os.path.join(BASE_DIR, '../../products.log'),
             'when': 'midnight',
             'interval': 1,
             'formatter': 'simple2',
@@ -199,7 +194,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             # 'filename': os.path.join(BASE_DIR, 'products.log'),
-            'filename': os.path.join(BASE_DIR, 'log/products2.log'),
+            'filename': os.path.join(BASE_DIR, 'log/../../log/products2.log'),
             'when': 'midnight',
             'interval': 1,
             'formatter': 'simple2',
@@ -212,7 +207,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'backupCount': 5,
             'maxBytes': 1000,
-            'filename': os.path.join(BASE_DIR, 'products.log'),
+            'filename': os.path.join(BASE_DIR, '../../products.log'),
         },
     },
     'loggers': {
@@ -232,21 +227,3 @@ LOGGING = {
         }
     }
 }
-
-# debug tool bar
-DEBUG_TOOLBAR_PANELS = [
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-    'debug_toolbar.panels.redirects.RedirectsPanel',
-]
-
-INTERNAL_IPS = ['127.0.0.1', '0.0.0.0', ]

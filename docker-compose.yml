@@ -3,6 +3,8 @@ version: '3.4'
 volumes:
   django_sample.db.volume:
     name: django_sample.db.volume
+  django_sample.postgres-data:
+    name: django_sample.postgres-data
   staticdata:
 
 services:
@@ -19,6 +21,16 @@ services:
     ports:
       - 3306:3306
     tty: true
+  postgresql:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1qaz2wsx
+    ports:
+      - "5432:5432"
+    container_name: django_sample.postgres-db
+    volumes:
+      - django_sample.postgres-data:/var/lib/postgresql/data
   web:
     container_name: django_sample.web
     restart: always
